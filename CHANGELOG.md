@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.31] - 2026-03-10
+
+### Fixed
+- Ghostty notifications now use OSC 9 instead of OSC 777 — previously sent an unsupported sequence resulting in only a bell sound with no desktop notification banner (#38) - @raeperd
+- Bundled `dist/index.js` no longer contains absolute source file paths from the build machine (#40) - @xxNull-lsk
+
+### Changed
+- Plugin no longer runs on Desktop and Web clients, which have built-in notification support (#39) - @ZTzTopia
+
 ## [0.1.30] - 2026-03-04
 
 ### Added
