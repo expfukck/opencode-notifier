@@ -354,7 +354,8 @@ async function handleEventWithElapsedTime(
 export const NotifierPlugin: Plugin = async ({ client, directory }) => {
   const clientEnv = process.env.OPENCODE_CLIENT
   if (clientEnv && clientEnv !== "cli") {
-    return {}
+    const config = loadConfig()
+    if (!config.enableOnDesktop) return {}
   }
 
   const getConfig = () => loadConfig()

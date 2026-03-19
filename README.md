@@ -55,6 +55,7 @@ Create `~/.config/opencode/opencode-notifier.json` with the defaults:
   "showSessionTitle": false,
   "showIcon": true,
   "suppressWhenFocused": true,
+  "enableOnDesktop": false,
   "notificationSystem": "osascript",
   "linux": {
     "grouping": false
@@ -112,6 +113,8 @@ Create `~/.config/opencode/opencode-notifier.json` with the defaults:
   "showProjectName": true,
   "showSessionTitle": false,
   "showIcon": true,
+  "suppressWhenFocused": true,
+  "enableOnDesktop": false,
   "notificationSystem": "osascript"
 }
 ```
@@ -120,9 +123,10 @@ Create `~/.config/opencode/opencode-notifier.json` with the defaults:
 - `notification` - Turn notifications on/off (default: true)
 - `timeout` - How long notifications show in seconds, Linux only (default: 5)
 - `showProjectName` - Show folder name in notification title (default: true)
-- `showSessionTitle` - Include the session title in notification messages via `{sessionTitle}` placeholder (default: true)
+- `showSessionTitle` - Include the session title in notification messages via `{sessionTitle}` placeholder (default: false)
 - `showIcon` - Show OpenCode icon, Windows/Linux only (default: true)
 - `suppressWhenFocused` - Skip notifications and sounds when the terminal is the active window (default: true). See [Focus detection](#focus-detection) for platform details
+- `enableOnDesktop` - Run the plugin on Desktop and Web clients (default: false). When false, the plugin only runs on CLI. Set to true if you want notifications/sounds/commands on Desktop/Web — useful if you want custom commands (Telegram, webhooks) but don't care about built-in notifications
 - `notificationSystem` - macOS only: `"osascript"`, `"node-notifier"`, or `"ghostty"` (default: "osascript"). Use `"ghostty"` if you're running Ghostty terminal for native OSC 9 notifications
 - `linux.grouping` - Linux only: replace notifications in-place instead of stacking (default: false). Requires `notify-send` 0.8+
 

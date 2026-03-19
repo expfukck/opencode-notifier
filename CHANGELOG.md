@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.34] - 2026-03-17
+
+### Added
+- New `enableOnDesktop` config option (#48)
+  - Set to `true` to run the plugin on Desktop and Web clients (default: false)
+  - By default, the plugin only runs on CLI to avoid duplicate notifications with Desktop's built-in notifications
+  - When enabled, you get sounds, notifications, and custom commands on Desktop/Web
+  - Useful if you want custom commands (Telegram, webhooks) but don't care about built-in notifications
+
+### Fixed
+- Windows active window detection now works correctly (#49) - @normanre
+  - Previously the PowerShell here-string was incorrectly collapsed, causing detection to always fail
+  - Now uses `-MemberDefinition` one-liner with proper `execFileSync` args array
+  - Falls back to `pwsh` if `powershell` is not available
+
 ## [0.1.33] - 2026-03-16
 
 ### Added

@@ -37,6 +37,7 @@ export interface NotifierConfig {
   showSessionTitle: boolean
   showIcon: boolean
   suppressWhenFocused: boolean
+  enableOnDesktop: boolean
   notificationSystem: "osascript" | "node-notifier" | "ghostty"
   linux: LinuxConfig
   command: CommandConfig
@@ -92,6 +93,7 @@ const DEFAULT_CONFIG: NotifierConfig = {
   showSessionTitle: false,
   showIcon: true,
   suppressWhenFocused: true,
+  enableOnDesktop: false,
   notificationSystem: "osascript",
   linux: {
     grouping: false,
@@ -233,6 +235,7 @@ export function loadConfig(): NotifierConfig {
       showSessionTitle: userConfig.showSessionTitle ?? DEFAULT_CONFIG.showSessionTitle,
       showIcon: userConfig.showIcon ?? DEFAULT_CONFIG.showIcon,
       suppressWhenFocused: userConfig.suppressWhenFocused ?? DEFAULT_CONFIG.suppressWhenFocused,
+      enableOnDesktop: typeof userConfig.enableOnDesktop === "boolean" ? userConfig.enableOnDesktop : DEFAULT_CONFIG.enableOnDesktop,
       notificationSystem:
         userConfig.notificationSystem === "node-notifier"
           ? "node-notifier"
