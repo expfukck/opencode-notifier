@@ -181,6 +181,7 @@ Customize the notification text:
 Messages support placeholder tokens that get replaced with actual values:
 
 - `{sessionTitle}` - The title/summary of the current session (e.g. "Fix login bug")
+- `{agentName}` - Subagent name extracted from session titles with `(@name subagent)` suffix (e.g. `builder`, `codebase-researcher`), empty for non-subagent sessions
 - `{projectName}` - The project folder name
 - `{timestamp}` - Current time in `HH:MM:SS` format (e.g. "14:30:05")
 - `{turn}` - Global notification counter that persists across restarts (e.g. 1, 2, 3). Stored in `~/.config/opencode/opencode-notifier-state.json`
@@ -236,7 +237,7 @@ Set per-event volume from `0` to `1`:
 
 ### Custom commands
 
-Run your own script when something happens. Use `{event}`, `{message}`, `{sessionTitle}`, `{projectName}`, `{timestamp}`, and `{turn}` as placeholders:
+Run your own script when something happens. Use `{event}`, `{message}`, `{sessionTitle}`, `{agentName}`, `{projectName}`, `{timestamp}`, and `{turn}` as placeholders:
 
 ```json
 {
@@ -251,7 +252,7 @@ Run your own script when something happens. Use `{event}`, `{message}`, `{sessio
 
 - `enabled` - Turn command on/off
 - `path` - Path to your script/executable
-- `args` - Arguments to pass, can use `{event}`, `{message}`, `{sessionTitle}`, `{projectName}`, `{timestamp}`, and `{turn}` tokens
+- `args` - Arguments to pass, can use `{event}`, `{message}`, `{sessionTitle}`, `{agentName}`, `{projectName}`, `{timestamp}`, and `{turn}` tokens
 - `minDuration` - Skip if response was quick, avoids spam (seconds)
 
 #### Example: Log events to a file
@@ -300,6 +301,18 @@ If you're using [Ghostty](https://ghostty.org/) terminal, you can use its native
 ```
 
 This sends notifications directly through the terminal instead of using system notification tools. Works on any platform where Ghostty is running.
+
+If you're using Ghostty inside tmux, enable passthrough in your tmux config so OSC 9 notifications can pass through:
+
+```tmux
+set -g allow-passthrough on
+```
+
+Then reload tmux config:
+
+```bash
+tmux source-file ~/.tmux.conf
+```
 
 ## Focus detection
 

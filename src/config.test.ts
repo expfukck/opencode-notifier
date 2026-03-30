@@ -188,6 +188,21 @@ describe("Config", () => {
 
     expect(result).toBe("Question 3: Fix bug")
   })
+
+  test("interpolateMessage substitutes {agentName} placeholder", async () => {
+    const { interpolateMessage } = await import("./config")
+    const result = interpolateMessage("Subagent: {agentName}", { agentName: "builder" })
+
+    expect(result).toBe("Subagent: builder")
+  })
+
+  test("interpolateMessage handles empty {agentName}", async () => {
+    const { interpolateMessage } = await import("./config")
+    const result = interpolateMessage("Subagent: {agentName}", {})
+
+    expect(result).toBe("Subagent")
+  })
+
   test("interpolateMessage cleans up empty {timestamp} and {turn}", async () => {
     const { interpolateMessage } = await import("./config")
     const result = interpolateMessage("Event {turn} at {timestamp}", {})

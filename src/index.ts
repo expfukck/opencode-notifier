@@ -99,13 +99,39 @@ function formatTimestamp(): string {
   return `${h}:${m}:${s}`
 }
 
+export function extractAgentNameFromSessionTitle(sessionTitle: string | null | undefined): string {
+  if (!sessionTitle) {
+    return ""
+  }
+
+  const match = sessionTitle.match(/\s*\(@([^\s)]+)\s+subagent\)\s*$/)
+  return match ? match[1] : ""
+}
+
+function shouldResolveAgentNameForEvent(config: NotifierConfig, eventType: EventType): boolean {
+  if (getMessage(config, eventType).includes("{agentName}")) {
+    return true
+  }
+
+  if (!config.command.enabled || !isEventCommandEnabled(config, eventType)) {
+    return false
+  }
+
+  if (config.command.path.includes("{agentName}")) {
+    return true
+  }
+
+  return (config.command.args ?? []).some((arg) => arg.includes("{agentName}"))
+}
+
 async function handleEvent(
   config: NotifierConfig,
   eventType: EventType,
   projectName: string | null,
   elapsedSeconds?: number | null,
   sessionTitle?: string | null,
-  sessionID?: string | null
+  sessionID?: string | null,
+  agentName?: string | null
 ): Promise<void> {
   if (config.suppressWhenFocused && isTerminalFocused()) {
     return
@@ -119,6 +145,7 @@ async function handleEvent(
   const rawMessage = getMessage(config, eventType)
   const message = interpolateMessage(rawMessage, {
     sessionTitle: config.showSessionTitle ? sessionTitle : null,
+    agentName,
     projectName,
     timestamp,
     turn,
@@ -147,7 +174,7 @@ async function handleEvent(
       elapsedSeconds < minDuration)
 
   if (!shouldSkipCommand) {
-    runCommand(config, eventType, message, sessionTitle, projectName, timestamp, turn)
+    runCommand(config, eventType, message, sessionTitle, agentName, projectName, timestamp, turn)
   }
 
   await Promise.allSettled(promises)
@@ -346,12 +373,15 @@ async function handleEventWithElapsedTime(
   }
 
   let sessionTitle: string | null = preloadedSessionTitle ?? null
-  if (sessionID && !sessionTitle && config.showSessionTitle) {
+  const shouldLookupSessionInfo = sessionID && !sessionTitle && (config.showSessionTitle || shouldResolveAgentNameForEvent(config, eventType))
+  if (shouldLookupSessionInfo) {
     const info = await getSessionInfo(client, sessionID)
     sessionTitle = info.title
   }
 
-  await handleEvent(config, eventType, projectName, elapsedSeconds, sessionTitle, sessionID)
+  const agentName = extractAgentNameFromSessionTitle(sessionTitle)
+
+  await handleEvent(config, eventType, projectName, elapsedSeconds, sessionTitle, sessionID, agentName)
 }
 
 export const NotifierPlugin: Plugin = async ({ client, directory }) => {

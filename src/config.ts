@@ -24,6 +24,7 @@ export interface LinuxConfig {
 
 export interface MessageContext {
   sessionTitle?: string | null
+  agentName?: string | null
   projectName?: string | null
   timestamp?: string | null
   turn?: number | null
@@ -345,6 +346,9 @@ export function interpolateMessage(message: string, context: MessageContext): st
 
   const sessionTitle = context.sessionTitle || ""
   result = result.replaceAll("{sessionTitle}", sessionTitle)
+
+  const agentName = context.agentName || ""
+  result = result.replaceAll("{agentName}", agentName)
 
   const projectName = context.projectName || ""
   result = result.replaceAll("{projectName}", projectName)
